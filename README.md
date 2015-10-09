@@ -1,1 +1,1 @@
-# CSE232Project
+# Eventor
