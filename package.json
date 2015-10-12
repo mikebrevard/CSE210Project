@@ -1,0 +1,22 @@
+{
+  "name": "eventor",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mikebrevard/Eventor"
+  },
+  "author": "Angie Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikebrevard/Eventor/issues"
+  },
+  "homepage": "https://github.com/mikebrevard/Eventor"
+}
