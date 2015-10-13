@@ -6,6 +6,9 @@ var app = express();
 //------------------------------
 app.use(express.static(__dirname + '/public'));
 
+// set up routes
+app.use(require('./controllers'));
+
 // choose a port
 app.listen(process.env.PORT || 8000);
 
