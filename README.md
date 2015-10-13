@@ -1,8 +1,12 @@
 # Eventor
 
-## To deploy locally,
+## To deploy locally
 
-- Download node.js, set up appropriate PATH vars and all that stuff
+- Download [node.js](https://nodejs.org/en/), set up appropriate PATH vars and all that stuff
 - In terminal, go to directory where index.js is located (Eventor/)
 - run "node index.js" in terminal
-- Open browser, open "http://localhost:8000"
+- Open browser, open [http://localhost:8000](http://localhost:8000)
+
+## Current deployment address
+
+[http://eventor-dev.herokuapp.com](http://eventor-dev.herokuapp.com)
