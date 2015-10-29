@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "express": "*",
-    "body-parser": "*"
+    "body-parser": "*",
+    "parse": "*"
   },
   "repository": {
     "type": "git",

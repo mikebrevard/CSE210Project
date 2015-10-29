@@ -5,7 +5,7 @@ var express = require('express')
 
 
 router.use(bodyParser.json())
-router.use(bodyParser.urlencoded())
+router.use(bodyParser.urlencoded({extended: true}));
 
 router.get('/test', function(req, res) {
     res.sendFile(path.join(__dirname, '../views/index.html'))
