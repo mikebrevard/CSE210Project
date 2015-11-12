@@ -1,7 +1,7 @@
-var express = require('express');
-
-var app = express();
-var fs = require('fs');
+var express = require('express')
+	, app = express()
+	, fs = require('fs')
+	, handlebars = require('express-handlebars');
 
 //------------------------------
 // SERVE PUBLIC FOLDER
@@ -18,9 +18,13 @@ Parse.initialize("TAqW6JABm2HvOp28LtglzAaCOXvg0hqYhLTnqHV7",
 // dynamically include routes (Controller)
 fs.readdirSync('./controllers').forEach(function (file) {
   if(file.substr(-3) == '.js') {
-      app.use(require('./controllers/' + file))
+      app.use(require(__dirname + '/controllers/' + file))
   }
 });
+
+app.engine('html', handlebars({extname:'html', defaultLayout:'main'}));
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
 
 // choose a port
 app.listen(process.env.PORT || 8000);

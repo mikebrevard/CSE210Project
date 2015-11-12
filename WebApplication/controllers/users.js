@@ -9,16 +9,30 @@ var express = require('express')
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}));
 
-router.get('/test', function(req, res) {
-	res.sendFile(path.join(__dirname, '../views/index.html'))
-})
 
-router.get('/', function(req, res) {
-	res.sendFile(path.join(__dirname, '../views/login.html'))
+
+router.get('/event/:user_id', function(req, res) {
+	console.log(req.params.user_id);
+	/*var obj = { 
+  		title: "My New Post", 
+  		body: req.user_id
+	}
+	res.sendFile(path.join(__dirname, '../views/profile.html'))*/
 })
 
 router.get('/profile', function(req, res) {
-	res.sendFile(path.join(__dirname, '../views/profile.html'))
+	
+	var currentUser = Parse.User.current();
+	if (currentUser) {
+	    var obj = { 
+  		title: "My New Post", 
+  		body: req.user_id
+		}
+		res.render('profile', data)
+	} else {
+	    res.render('index')
+	}
+	
 })
 
 router.post('/login', function(req, res) {
@@ -26,7 +40,14 @@ router.post('/login', function(req, res) {
 	if (req.body.action == "login") {
 		Parse.User.logIn(req.body.email, req.body.password, {
 		  success: function(user) {
-		    res.send("You were successfully logged in!")
+		  	// set user as current user
+		  	Parse.User.become("session-token-here").then(function (user) {
+			  	// The current user is now set to user.
+		    	res.render('profile', )
+			}, function (error) {
+			  res.send("Something went wrong. Please try again later.")
+			});
+
 		  },
 		  error: function(user, error) {
 		    res.send("Your credentials were incorrect. Please try again.")
