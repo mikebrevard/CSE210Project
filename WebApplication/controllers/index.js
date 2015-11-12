@@ -27,7 +27,7 @@ router.post('/login', function(req, res) {
 	if (req.body.action == "login") {
 		// do the post to models Parse
 		// failure:
-			res.send('homepage', json failure)
+			res.send('Login attempt')
 		// success : res.send("profile.html", jsonobject)
 
 	}
