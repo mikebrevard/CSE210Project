@@ -5,7 +5,6 @@ var express = require('express')
 	, path = require('path')
 	, bodyParser = require('body-parser')
 	, Parse = require('parse/node').Parse
-	, user = require('../models/user')
 
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}));
@@ -25,17 +24,34 @@ router.get('/profile', function(req, res) {
 router.post('/login', function(req, res) {
 	console.log(req.body.action);
 	if (req.body.action == "login") {
-		// do the post to models Parse
-		// failure:
-			res.send('Login attempt')
-		// success : res.send("profile.html", jsonobject)
+		Parse.User.logIn(req.body.email, req.body.password, {
+		  success: function(user) {
+		    res.send("You were successfully logged in!")
+		  },
+		  error: function(user, error) {
+		    res.send("Your credentials were incorrect. Please try again.")
+		  }
+		});
 
 	}
 	else if (req.body.action == "register") {
-		res.send('Register attempt')
+		var user = new Parse.User();
+
+		user.set("username", req.body.email);
+		user.set("email", req.body.email);
+		user.set("password", req.body.password);
+
+		user.signUp(null, {
+		  success: function(user) {
+		    // Hooray! Let them use the app now.
+			res.send('You were successfully registered!')
+		  },
+		  error: function(user, error) {
+		    // Show the error message somewhere and let the user try again.
+		    res.send("Error: " + error.code + " " + error.message)
+		  }
+		});
 	}
-	console.log(req.body.email);
-	console.log(req.body.inputPassword);
 	
 	// TODO: add in userRegister(req)
 	// userRegister(req);
