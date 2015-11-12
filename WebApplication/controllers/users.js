@@ -43,7 +43,7 @@ router.post('/login', function(req, res) {
 		  	// set user as current user
 		  	Parse.User.become("session-token-here").then(function (user) {
 			  	// The current user is now set to user.
-		    	res.render('profile', )
+		    	res.render('index', Parse.User.email)
 			}, function (error) {
 			  res.send("Something went wrong. Please try again later.")
 			});
