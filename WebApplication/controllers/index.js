@@ -12,6 +12,7 @@ router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.get('/', function(req, res) {
+	// cache if anything
 	res.render('login')
 })
 

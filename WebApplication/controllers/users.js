@@ -41,16 +41,12 @@ router.post('/login', function(req, res) {
 		Parse.User.logIn(req.body.email, req.body.password, {
 		  success: function(user) {
 		  	// set user as current user
-		  	Parse.User.become("session-token-here").then(function (user) {
-			  	// The current user is now set to user.
-		    	res.render('index', Parse.User.email)
-			}, function (error) {
-			  res.send("Something went wrong. Please try again later.")
-			});
+		  	
+		    res.render('index', {email: user.get('email')})
 
 		  },
 		  error: function(user, error) {
-		    res.send("Your credentials were incorrect. Please try again.")
+		    res.render('404', {message:"Your credentials were incorrect. Please try again."})
 		  }
 		});
 
@@ -69,7 +65,7 @@ router.post('/login', function(req, res) {
 		  },
 		  error: function(user, error) {
 		    // Show the error message somewhere and let the user try again.
-		    res.send("Error: " + error.code + " " + error.message)
+		    res.render('404', {message: "Error: " + error.code + " " + error.message})
 		  }
 		});
 	}
