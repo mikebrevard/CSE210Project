@@ -1,8 +1,7 @@
 var express = require('express')
 	, app = express()
 	, fs = require('fs')
-	, handlebars = require('express-handlebars')
-	, passportParse = require('passport-parse');
+	, handlebars = require('express-handlebars');
 
 //------------------------------
 // SERVE PUBLIC FOLDER
