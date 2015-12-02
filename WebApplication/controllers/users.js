@@ -9,44 +9,71 @@ var express = require('express')
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}));
 
-
+// gets the current profile information
 router.get('/profile', function(req, res) {
-	
-        var currentUser = Parse.User.current();
-		if (currentUser) {
-		    var data = { 
-		  		email: currentUser.get('email'), 
-		  		password: currentUser.get('password')
-			}
-			res.render('profile', data)
-		} else {
-		    res.render('index')
+    var currentUser = Parse.User.current();
+	if (currentUser) {
+	    var data = { 
+	  		email: currentUser.get('email')
 		}
-	
-	
+		res.render('profile', data)
+	} else {
+	    res.redirect('login')
+	}	
 })
 
-router.get('/logout', function(req, res) {
+// update the profile
+router.post('/profile', function(req, res) {
+	var currentUser = Parse.User.current();
+	if (currentUser) {
+		currentUser.set("password", req.body.password);
+	
+		// TODO: doesnt seem to work
+		currentUser.save(null, {
+	        success: function(user) {
+	        	var data = { 
+			  		email: currentUser.get('email'),
+			  		message: "Your profile has been updated."
+				}
+	            res.render('profile', data);
+	        },
+	        error: function(user, error) {
+	            // Show the error message somewhere and let the user try again.
+	            var data = { 
+			  		email: currentUser.get('email'),
+			  		message: "Error: " + error.code + " " + error.message
+				}
+	            res.render('profile', data);
+	        }
+    	});
+	}
+})
+
+
+router.get('/logout', function (req, res) {
 	Parse.User.logOut();
 	req.session = null;
-	res.render('index');
+	res.redirect('login');
 })
 
-router.post('/login', function(req, res) {
+router.get('/login', function (req, res) {
+	res.render('login')
+})
+
+router.post('/login', function (req, res) {
 	if (req.body.action == "login") {
 		Parse.User.logIn(req.body.email, req.body.password, {
-		  	success: function(user) {
+		  	success: function (user) {
 		  		//Parse.User.become(req.session.token ? req.session.token : "no_token").then(function(user) { // If null is passed to .become() it will assume current(), which we don't want
 				  // The current user is now set to user.
-				  res.render('dashboard', {email: user.get('email')});
+				  res.redirect('dashboard');
 		
 		    	//})
 		  	},
-		  	error: function(user, error) {
-				res.render('404', {message:"Your credentials were incorrect. Please try again."})
+		  	error: function (user, error) {
+				res.render('login', {message:"Your credentials were incorrect. Please try again."})
 		  	}
 		});
-
 	}
 	else if (req.body.action == "register") {
 		var user = new Parse.User();
@@ -56,13 +83,13 @@ router.post('/login', function(req, res) {
 		user.set("password", req.body.password);
 
 		user.signUp(null, {
-		  	success: function(user) {
+		  	success: function (user) {
 		    	// Hooray! Let them use the app now.
-				res.render('dashboard', {email: user.get('email')})
+				res.redirect('dashboard')
 		  	},
-		  	error: function(user, error) {
+		  	error: function (user, error) {
 		    	// Show the error message somewhere and let the user try again.
-		    	res.render('404', {message: "Error: " + error.code + " " + error.message})
+		    	res.render('login', {message: "Error: " + error.code + " " + error.message})
 		  	}
 		});
 	}

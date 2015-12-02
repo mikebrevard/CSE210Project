@@ -13,28 +13,51 @@
 <title>Eventor</title>
 
 <!-- Bootstrap core CSS -->
-<link href="./assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="./assets/css/style.css" rel="stylesheet">
+<link href="/assets/css/style.css" rel="stylesheet">
 
-<script type="text/javascript" src="./assets/js/parse.min.js"></script>
-<script type="text/javascript" src="./assets/js/scripts.js"></script>
+<script type="text/javascript" src="/assets/js/parse.min.js"></script>
+<script type="text/javascript" src="/assets/js/scripts.js"></script>
 
 
 </head>
 
 <body>
 
-	{{{ body }}}
+<!-- Nav Bar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Eventor</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/profile">Profile</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- end Nav Bar -->
 	
 	
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="./assets/js/jquery.min.js"></script>
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    {{{ body }}}
+
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="./assets/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/assets/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 </body>
 </html>

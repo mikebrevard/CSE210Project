@@ -1,45 +1,15 @@
-<!-- Nav Bar -->
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Eventor</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="dashboard">Dashboard</a></li>
-        <li><a href="profile">Profile</a></li>
-        <li><a href="logout">Logout</a></li>
-      </ul>
-      <form class="navbar-form navbar-right">
-        <input type="text" class="form-control" placeholder="Search...">
-      </form>
-    </div>
-  </div>
-</nav>
-<!-- end Nav Bar -->
 
-    <div class="container">
+    <div class="container">    
 
-      <form class="form-signin" action="test" method="get">
+      <form action="profile" method="post">
         <h2 class="form-signin-heading">Edit Profile</h2>
-        <label for="inputUsername" class="sr-only">Username</label>
-        {{email}}
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="{{email}}" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="{{password}}" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      
+        <label for="email">Email Address</label>
+        <p>{{email}}</p>
+        <label for="password">New Password</label>
+        <input type="password" name="password" id="password" class="form-control" required>
+        <p class="red">{{message}}</p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Save Changes</button>
       </form>
 
     </div> <!-- /container -->

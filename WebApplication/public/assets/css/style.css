@@ -7,6 +7,19 @@ body {
   padding-top: 50px;
 }
 
+.red {
+  color: red;
+}
+
+.results tr[visible='false'],
+.no-result{
+  display:none;
+}
+
+.results tr[visible='true']{
+  display:table-row;
+}
+
 
 /*
  * Global add-ons
