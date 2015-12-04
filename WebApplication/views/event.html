@@ -1,10 +1,21 @@
+<div class="container">    
+    <h2>{{name}}</h2>
+    <p>ID: {{objectId}}</p> 
+    <p>Location: {{LocationCity}}</p> 
+    <p>Description: {{Description}}</p>
 
-    <div class="container">    
+    {{#if admin}}
+    <a href="/event_form" class="btn btn-lg btn-primary">Edit</a>
+    {{else}}
+        {{#if joined}}
+        <a href="/event_form" class="btn btn-lg btn-primary">Check-in</a>
+        {{else}}
+        <a href="/attend/{{objectId}}" class="btn btn-lg btn-primary">Attend</a> 
+        {{/if}}
+    {{/if}}  
 
-      <h2>{{name}}</h2>
-      <p>ID: {{objectId}}</p> 
-      <p>Location: {{LocationCity}}</p> 
+    <!-- show all people and their status -->
 
-    </div> <!-- /container -->
+</div> <!-- /container -->
 
 

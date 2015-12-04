@@ -26,37 +26,6 @@
 
       <a href="event_form" class="btn btn-lg btn-primary">Create A New Event</a>
 
-      <h2 class="sub-header">
-        All Events
-        <div class="form-group pull-right">
-          <input type="text" id="all_search" class="search form-control" placeholder="What you looking for?">
-        </div>
-      </h2>
-      <div class="table-responsive">
-        <table id="all_results" class="table table-hover table-striped results">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Event Name</th>
-              <th>Location</th>
-            </tr>
-            <tr id="all_no-result" class="warning no-result">
-              <td colspan="4"><i class="fa fa-warning"></i> No result</td>
-            </tr>
-          </thead>
-          <tbody>
-
-          {{#each allEvents}}
-          <tr>
-          <td>{{objectId}}</td>
-          <td><a href="event/{{objectId}}">{{name}}</a></td>
-          <td>{{LocationCity}}</td>
-          </tr>
-          {{/each}}
-            
-          </tbody>
-        </table>
-      </div>
 
       <h2 class="sub-header">
         Your Events
@@ -68,7 +37,7 @@
         <table id="your_results" class="table table-hover table-striped results">
           <thead>
             <tr>
-              <th>#</th>
+              <th class="col-lg-2">#</th>
               <th>Event Name</th>
               <th>Location</th>
             </tr>
@@ -91,6 +60,72 @@
       </div>
 
 
+      <h2 class="sub-header">
+        Joined Events
+        <div class="form-group pull-right">
+          <input type="text" id="joined_search" class="search form-control" placeholder="What you looking for?">
+        </div>
+      </h2>
+      <div class="table-responsive">
+        <table id="joined_results" class="table table-hover table-striped results">
+          <thead>
+            <tr>
+              <th class="col-lg-2">#</th>
+              <th>Event Name</th>
+              <th>Location</th>
+            </tr>
+            <tr id="joined_no-result" class="warning no-result">
+              <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+            </tr>
+          </thead>
+          <tbody>
+
+          {{#each joinedEvents}}
+          <tr>
+          <td>{{objectId}}</td>
+          <td><a href="event/{{objectId}}">{{name}}</a></td>
+          <td>{{LocationCity}}</td>
+          </tr>
+          {{/each}}
+            
+          </tbody>
+        </table>
+      </div>
+
+
+      <h2 class="sub-header">
+        All Events
+        <div class="form-group pull-right">
+          <input type="text" id="all_search" class="search form-control" placeholder="What you looking for?">
+        </div>
+      </h2>
+      <div class="table-responsive">
+        <table id="all_results" class="table table-hover table-striped results">
+          <thead>
+            <tr>
+              <th class="col-lg-2">#</th>
+              <th>Event Name</th>
+              <th>Location</th>
+            </tr>
+            <tr id="all_no-result" class="warning no-result">
+              <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+            </tr>
+          </thead>
+          <tbody>
+
+          {{#each allEvents}}
+          <tr>
+          <td>{{objectId}}</td>
+          <td><a href="event/{{objectId}}">{{name}}</a></td>
+          <td>{{LocationCity}}</td>
+          </tr>
+          {{/each}}
+            
+          </tbody>
+        </table>
+      </div>
+
+
     </div>
   </div>
 </div>
@@ -98,6 +133,57 @@
 <script>
 $(document).ready(function() {
 
+// your
+  $("#your_search").keyup(function () {
+    var searchTerm = $("#your_search").val();
+    var listItem = $('#your_results tbody').children('tr');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+    
+  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+    
+  $("#your_results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','false');
+  });
+
+  $("#your_results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','true');
+  });
+
+  var jobCount = $('#your_results tbody tr[visible="true"]').length;
+
+  if(jobCount == '0') {$('#your_no-result').show();}
+    else {$('#your_no-result').hide();}
+  });
+
+  // joined
+  $("#joined_search").keyup(function () {
+    var searchTerm = $("#joined_search").val();
+    var listItem = $('#joined_results tbody').children('tr');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+    
+  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+    
+  $("#joined_results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','false');
+  });
+
+  $("#joined_results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','true');
+  });
+
+  var jobCount = $('#joined_results tbody tr[visible="true"]').length;
+
+  if(jobCount == '0') {$('#joined_no-result').show();}
+    else {$('#joined_no-result').hide();}
+  });
+
+// all
  $("#all_search").keyup(function () {
     var searchTerm = $("#all_search").val();
     var listItem = $('#all_results tbody').children('tr');
@@ -122,29 +208,6 @@ $(document).ready(function() {
     else {$('#all_no-result').hide();}
   });
 
-  $("#your_search").keyup(function () {
-    var searchTerm = $("#your_search").val();
-    var listItem = $('#your_results tbody').children('tr');
-    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
-    
-  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
-        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-    }
-  });
-    
-  $("#your_results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
-    $(this).attr('visible','false');
-  });
-
-  $("#your_results tbody tr:containsi('" + searchSplit + "')").each(function(e){
-    $(this).attr('visible','true');
-  });
-
-  var jobCount = $('#your_results tbody tr[visible="true"]').length;
-
-  if(jobCount == '0') {$('#your_no-result').show();}
-    else {$('#your_no-result').hide();}
-  });
 
    
 });
