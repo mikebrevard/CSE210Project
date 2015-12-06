@@ -139,7 +139,6 @@ router.get('/event/:_id', function (req, res) {
 				    						userName: obj.get('username'),
 				    						userStatus: results[i].get('CheckinStatus')
 				    					}
-				    					console.log(obj.get('username'));
 				    					arr.push(temp);
 				    				}
 				    				var data = {
@@ -167,7 +166,7 @@ router.get('/event/:_id', function (req, res) {
 						    query.first({
 						    	success: function(object) {
 						    		// joined
-						    		if (object != null) {						    		
+						    		if (object != null) {					    		
 							    		var data = {
 						    				objectId: event.id, 
 						    				name: event.get('name'),
@@ -175,6 +174,7 @@ router.get('/event/:_id', function (req, res) {
 						    				description: event.get('Description'),
 						    				admin: false,
 						    				joined: true,
+						    				checkedIn: object.get('CheckinStatus'),
 						    				userId: currentUser.id
 						    			}
 						    		}
@@ -328,17 +328,31 @@ router.get('/checkin/:_eventid/:_userid', function (req, res) {
 	    	success: function(object) {
 	    		// admin
 	    		if (object != null) {
-	    			console.log("confimed host for this event");
-	    			var data = {
-	    				objectId: event.id, 
-	    				name: event.get('name'),
-	    				location: event.get('LocationCity'),
-	    				description: event.get('Description'),
-	    				admin: true,
-	    				joined: false
-	    			}
-	    			// TODO render checkin validated
-	    			// set checkin status for that person to true
+	    			var EventAdmins = Parse.Object.extend("EventAttendees");
+					var query = new Parse.Query(EventAdmins);
+
+					var Event = Parse.Object.extend("Event");
+					var event = new Event();
+					event.id = req.params._eventid;
+					query.equalTo("event", event);
+
+					var User = new Parse.Object.extend("User");
+					var user = new User();
+					user.id = req.params._userid;
+					query.equalTo("user", user);
+
+				    query.first({
+				    	success: function(object) {
+				    			object.set("CheckinStatus", true);
+				    			object.save();
+				    			res.redirect('/event/' + event.id);
+				    		
+			    		
+			    		},
+			    		error: function(error) {
+			    			res.render('error', {message: "Error: " + error.code + " " + error.message})
+			    		}
+			    	});
 	    		}
 	    		// not admin, check if joined or not
 	    		else {
@@ -350,9 +364,6 @@ router.get('/checkin/:_eventid/:_userid', function (req, res) {
     			res.render('error', {message: "Error: " + error.code + " " + error.message})
     		}
     	});
-			
-		
-
 	} 
 	else {
 		res.redirect('/login');

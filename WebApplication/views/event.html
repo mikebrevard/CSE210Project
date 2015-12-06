@@ -21,6 +21,7 @@
           <th class="col-lg-2">#</th>
           <th>Email</th>
           <th>Checked in?</th>
+          <th>Manual Check-in</th>
         </tr>
         <tr id="no-result" class="warning no-result">
           <td colspan="4"><i class="fa fa-warning"></i> No result</td>
@@ -33,6 +34,7 @@
       <td>{{userId}}</td>
       <td>{{userName}}</td>
       <td>{{userStatus}}</td>
+      <td><a href="/checkin/{{../objectId}}/{{userId}}">Check In</a></td>
       </tr>
       {{/each}}
         
@@ -41,8 +43,15 @@
     </div>
     {{else}}
         {{#if joined}}
-        <p>Please have the host scan the following QR code:</p>
-        <div id="qrcode"></div>        
+            {{#if checkedIn}}
+            <p>You have already been checked in.</p>
+            {{else}}
+            <p>Please have the host scan the following QR code:</p>
+            <div id="qrcode"></div>
+            <script>
+                new QRCode(document.getElementById("qrcode"), window.location.host +"/checkin/{{objectId}}/{{userId}}");
+            </script>
+            {{/if}}
         {{else}}
         <a href="/attend/{{objectId}}" class="btn btn-lg btn-primary">Attend</a> 
         {{/if}}
@@ -51,8 +60,6 @@
 
 </div> <!-- /container -->
 <script>
-
-    new QRCode(document.getElementById("qrcode"), window.location.host +"/checkin/{{objectId}}/{{userId}}");
 
 $(document).ready(function() {
   // your
