@@ -1,21 +1,84 @@
 <div class="container">    
     <h2>{{name}}</h2>
     <p>ID: {{objectId}}</p> 
-    <p>Location: {{LocationCity}}</p> 
-    <p>Description: {{Description}}</p>
+    <p>Location: {{location}}</p> 
+    <p>Description: {{description}}</p>
 
     {{#if admin}}
     <a href="/event_form" class="btn btn-lg btn-primary">Edit</a>
+
+    <!-- show all people and their status -->
+    <h2 class="sub-header">
+    Attendees
+    <div class="form-group pull-right">
+      <input type="text" id="search" class="search form-control" placeholder="Search">
+    </div>
+    </h2>
+    <div class="table-responsive">
+    <table id="results" class="table table-hover table-striped results">
+      <thead>
+        <tr>
+          <th class="col-lg-2">#</th>
+          <th>Email</th>
+          <th>Checked in?</th>
+        </tr>
+        <tr id="no-result" class="warning no-result">
+          <td colspan="4"><i class="fa fa-warning"></i> No result</td>
+        </tr>
+      </thead>
+      <tbody>
+
+      {{#each attendees}}
+      <tr>
+      <td>{{userId}}</td>
+      <td>{{userName}}</td>
+      <td>{{userStatus}}</td>
+      </tr>
+      {{/each}}
+        
+      </tbody>
+    </table>
+    </div>
     {{else}}
         {{#if joined}}
-        <a href="/event_form" class="btn btn-lg btn-primary">Check-in</a>
+        <p>Please have the host scan the following QR code:</p>
+        <div id="qrcode"></div>        
         {{else}}
         <a href="/attend/{{objectId}}" class="btn btn-lg btn-primary">Attend</a> 
         {{/if}}
     {{/if}}  
 
-    <!-- show all people and their status -->
 
 </div> <!-- /container -->
+<script>
 
+    new QRCode(document.getElementById("qrcode"), window.location.host +"/checkin/{{objectId}}/{{userId}}");
+
+$(document).ready(function() {
+  // your
+  $("#search").keyup(function () {
+    var searchTerm = $("#search").val();
+    var listItem = $('#results tbody').children('tr');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+    
+  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+    
+  $("#results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','false');
+  });
+
+  $("#results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','true');
+  });
+
+  var jobCount = $('#results tbody tr[visible="true"]').length;
+
+  if(jobCount == '0') {$('#no-result').show();}
+    else {$('#no-result').hide();}
+  });
+});
+</script>
 

@@ -30,7 +30,7 @@
       <h2 class="sub-header">
         Your Events
         <div class="form-group pull-right">
-          <input type="text" id="your_search" class="search form-control" placeholder="What you looking for?">
+          <input type="text" id="your_search" class="search form-control" placeholder="Search">
         </div>
       </h2>
       <div class="table-responsive">
@@ -51,7 +51,7 @@
           <tr>
           <td>{{objectId}}</td>
           <td><a href="event/{{objectId}}">{{name}}</a></td>
-          <td>{{LocationCity}}</td>
+          <td>{{location}}</td>
           </tr>
           {{/each}}
             
@@ -63,7 +63,7 @@
       <h2 class="sub-header">
         Joined Events
         <div class="form-group pull-right">
-          <input type="text" id="joined_search" class="search form-control" placeholder="What you looking for?">
+          <input type="text" id="joined_search" class="search form-control" placeholder="Search">
         </div>
       </h2>
       <div class="table-responsive">
@@ -84,7 +84,7 @@
           <tr>
           <td>{{objectId}}</td>
           <td><a href="event/{{objectId}}">{{name}}</a></td>
-          <td>{{LocationCity}}</td>
+          <td>{{location}}</td>
           </tr>
           {{/each}}
             
@@ -96,7 +96,7 @@
       <h2 class="sub-header">
         All Events
         <div class="form-group pull-right">
-          <input type="text" id="all_search" class="search form-control" placeholder="What you looking for?">
+          <input type="text" id="all_search" class="search form-control" placeholder="Search">
         </div>
       </h2>
       <div class="table-responsive">
@@ -117,7 +117,7 @@
           <tr>
           <td>{{objectId}}</td>
           <td><a href="event/{{objectId}}">{{name}}</a></td>
-          <td>{{LocationCity}}</td>
+          <td>{{location}}</td>
           </tr>
           {{/each}}
             

@@ -18,7 +18,7 @@ router.get('/profile', function(req, res) {
 		}
 		res.render('profile', data)
 	} else {
-	    res.redirect('login')
+	    res.redirect('/login')
 	}	
 })
 
@@ -53,7 +53,7 @@ router.post('/profile', function(req, res) {
 router.get('/logout', function (req, res) {
 	Parse.User.logOut();
 	req.session = null;
-	res.redirect('login');
+	res.redirect('/login');
 })
 
 router.get('/login', function (req, res) {
@@ -66,12 +66,12 @@ router.post('/login', function (req, res) {
 		  	success: function (user) {
 		  		//Parse.User.become(req.session.token ? req.session.token : "no_token").then(function(user) { // If null is passed to .become() it will assume current(), which we don't want
 				  // The current user is now set to user.
-				  res.redirect('dashboard');
+				  res.redirect('/dashboard');
 		
 		    	//})
 		  	},
 		  	error: function (user, error) {
-				res.render('login', {message:"Your credentials were incorrect. Please try again."})
+				res.render('login', {message: "Your credentials were incorrect. Please try again."})
 		  	}
 		});
 	}
@@ -85,11 +85,11 @@ router.post('/login', function (req, res) {
 		user.signUp(null, {
 		  	success: function (user) {
 		    	// Hooray! Let them use the app now.
-				res.redirect('dashboard')
+				res.redirect('/dashboard')
 		  	},
 		  	error: function (user, error) {
 		    	// Show the error message somewhere and let the user try again.
-		    	res.render('login', {message: "Error: " + error.code + " " + error.message})
+		    	res.render('login', {message: error.message})
 		  	}
 		});
 	}

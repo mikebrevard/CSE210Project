@@ -1,14 +1,15 @@
 /* http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/ */
 
 var express = require('express')
-, router = express.Router()
-, path = require('path')
-, bodyParser = require('body-parser')
-, Parse = require('parse/node').Parse;
+	, router = express.Router()
+	, path = require('path')
+	, bodyParser = require('body-parser')
+	, Parse = require('parse/node').Parse;
 
 router.use(bodyParser.json())
 router.use(bodyParser.urlencoded({extended: true}));
 
+// first get
 router.get('/', function (req, res) {
 	var currentUser = Parse.User.current();
 	if (currentUser) {
@@ -35,7 +36,7 @@ router.get('/dashboard', function (req, res) {
 			    	var temp = {
 			    		objectId: results[i].id, 
 			    		name: results[i].get('name'),
-			    		LocationCity: results[i].get('LocationCity')
+			    		location: results[i].get('LocationCity')
 			    	}
 			    	arr.push(temp);
 			    }
@@ -51,7 +52,7 @@ router.get('/dashboard', function (req, res) {
 			    			var temp = {
 			    				objectId: obj.id, 
 			    				name: obj.get('name'),
-			    				LocationCity: obj.get('LocationCity')
+			    				location: obj.get('LocationCity')
 			    			}
 			    			arr2.push(temp);
 			    		}
@@ -66,7 +67,7 @@ router.get('/dashboard', function (req, res) {
 			    					var temp = {
 			    						objectId: obj.id, 
 			    						name: obj.get('name'),
-			    						LocationCity: obj.get('LocationCity')
+			    						location: obj.get('LocationCity')
 			    					}
 			    					arr3.push(temp);
 			    				}
@@ -74,14 +75,14 @@ router.get('/dashboard', function (req, res) {
 			    				
 			    			},
 			    			error: function(error){
-			    				console.log("Something went wrong")
+			    				res.render('error', {message: "Error: " + error.code + " " + error.message})
 			    			}
 			    		});
 
 			    		
 			    	},
 			    	error: function(error) {
-			    		console.log("Something went wrong")
+			    		res.render('error', {message: "Error: " + error.code + " " + error.message})
 			    	}
 			    });
 			},
@@ -124,14 +125,38 @@ router.get('/event/:_id', function (req, res) {
 			    	success: function(object) {
 			    		// admin
 			    		if (object != null) {
-			    			var data = {
-			    				objectId: event.id, 
-			    				name: event.get('name'),
-			    				LocationCity: event.get('LocationCity'),
-			    				Description: event.get('Description'),
-			    				admin: true,
-			    				joined: false
-			    			}
+			    			var arr = [];
+							var EventAttendees = Parse.Object.extend("EventAttendees");
+				    		var query = new Parse.Query(EventAttendees);
+				    		query.equalTo("event", event);
+				    		query.include("user");
+				    		query.find({
+				    			success: function(results) {
+				    				for (var i = 0; i < results.length; i++) {
+				    					var obj = results[i].get('user');
+				    					var temp = {
+				    						userId: obj.id, 
+				    						userName: obj.get('username'),
+				    						userStatus: results[i].get('CheckinStatus')
+				    					}
+				    					console.log(obj.get('username'));
+				    					arr.push(temp);
+				    				}
+				    				var data = {
+					    				objectId: event.id, 
+					    				name: event.get('name'),
+					    				location: event.get('LocationCity'),
+					    				description: event.get('Description'),
+					    				admin: true,
+					    				joined: false,
+					    				attendees: arr
+					    			}
+					    			res.render('event', data);
+				    			},
+				    			error: function(error){
+				    				res.render('error', {message: "Error: " + error.code + " " + error.message})
+				    			}
+				    		});
 			    		}
 			    		// not admin, check if joined or not
 			    		else {
@@ -141,35 +166,44 @@ router.get('/event/:_id', function (req, res) {
 						    query.equalTo("user", currentUser);
 						    query.first({
 						    	success: function(object) {
-						    		var b = false
-						    		if (object != null) {
-						    			b = true
+						    		// joined
+						    		if (object != null) {						    		
+							    		var data = {
+						    				objectId: event.id, 
+						    				name: event.get('name'),
+						    				location: event.get('LocationCity'),
+						    				description: event.get('Description'),
+						    				admin: false,
+						    				joined: true,
+						    				userId: currentUser.id
+						    			}
 						    		}
-						    		var data = {
-					    				objectId: event.id, 
-					    				name: event.get('name'),
-					    				LocationCity: event.get('LocationCity'),
-					    				Description: event.get('Description'),
-					    				admin: false,
-					    				joined: b
-					    			}
-						    		
-						    		res.render('event', data)
-						    	},
+						    		// not joined yet
+						    		else {
+						    			var data = {
+						    				objectId: event.id, 
+						    				name: event.get('name'),
+						    				location: event.get('LocationCity'),
+						    				description: event.get('Description'),
+						    				admin: false,
+						    				joined: false
+						    			}
+						    		}
+			    					res.render('event', data);
+						   		},
 						    	error: function(error) {
-						    		console.log("Error: " + error.code + " " + error.message);
+						    		res.render('error', {message: "Error: " + error.code + " " + error.message})
 						    	}
 						    });
 			    		}
-		    		
 		    		},
 		    		error: function(error) {
-		    			console.log("Error: " + error.code + " " + error.message);
+		    			res.render('error', {message: "Error: " + error.code + " " + error.message})
 		    		}
 		    	});
 			},
 			error: function(event, error) {
-				res.render('/404', {message: "Error: " + error.code + " " + error.message})
+				res.render('error', {message: "Error: " + error.code + " " + error.message})
 			}
 		});
 
@@ -209,23 +243,22 @@ router.post('/create_event', function (req, res) {
 
 			    newAdmin.save(null, {
 			    	success: function(eventadmin) {
-			    		
+			    		res.redirect('/event/' + event.id);
 			    	},
 			    	error: function(eventadmin, error) {
-			    		console.log('Failed to create new object, with error code: ' + error.message);
+			    		res.render('error', {message: "Error: " + error.code + " " + error.message})
 			    	}
 			    });
 			},
 			error: function(event, error) {
 			    // Execute any logic that should take place if the save fails.
 			    // error is a Parse.Error with an error code and message.
-			    console.log('Failed to create new object, with error code: ' + error.message);
+			   res.render('error', {message: "Error: " + error.code + " " + error.message})
 			}
 		});
-		res.redirect('event/' + event.id);
 	} 
 	else {
-		res.redirect('login')
+		res.redirect('/login')
 	}
 })
 
@@ -233,9 +266,6 @@ router.post('/create_event', function (req, res) {
 router.get('/attend/:_id', function (req, res) {
 	var currentUser = Parse.User.current();
 	if (currentUser) {
-
-
-
 		var Event = Parse.Object.extend("Event");
 		var query = new Parse.Query(Event);
 		query.get(req.params._id, {
@@ -257,23 +287,21 @@ router.get('/attend/:_id', function (req, res) {
 
 							newAttendee.save(null, {
 							 	success: function(eventattendee) {
+							 		res.redirect('/event/' + event.id);
 							 	},
 							 	error: function(eventattendee, error) {
-							 		console.log('Failed to create new object, with error code: ' + error.message);
+							 		res.render('error', {message: "Error: " + error.code + " " + error.message})
 							 	}
 							});
-			    			
-			    		}
-			    		res.redirect('/event/' + event.id);
-			    		
+			    		}		    		
 			    	},
 			    	error: function(error) {
-			    		console.log("Error: " + error.code + " " + error.message);
+			    		res.render('error', {message: "Error: " + error.code + " " + error.message})
 			    	}
 			    });
 			},
 			error: function(error) {
-
+				res.render('error', {message: "Error: " + error.code + " " + error.message})
 			}
 		});
 	}
@@ -282,13 +310,57 @@ router.get('/attend/:_id', function (req, res) {
 	}
 })
 
-router.get('/checkin/:_userid/:_eventid', function (req, res) {
+router.get('/checkin/:_eventid/:_userid', function (req, res) {
 	// make sure only host is logged in
-	// render the checkin validated
+	var currentUser = Parse.User.current();
+	if (currentUser) {
+		// open up query for EventAdmins
+		var EventAdmins = Parse.Object.extend("EventAdmins");
+		var query = new Parse.Query(EventAdmins);
+
+		var Event = Parse.Object.extend("Event");
+		var event = new Event();
+		event.id = req.params._eventid;
+		query.equalTo("event", event);
+		query.equalTo("user", currentUser);
+
+	    query.first({
+	    	success: function(object) {
+	    		// admin
+	    		if (object != null) {
+	    			console.log("confimed host for this event");
+	    			var data = {
+	    				objectId: event.id, 
+	    				name: event.get('name'),
+	    				location: event.get('LocationCity'),
+	    				description: event.get('Description'),
+	    				admin: true,
+	    				joined: false
+	    			}
+	    			// TODO render checkin validated
+	    			// set checkin status for that person to true
+	    		}
+	    		// not admin, check if joined or not
+	    		else {
+					res.render('error', {message: "You must be the host of this event to check people in."})
+	    		}
+    		
+    		},
+    		error: function(error) {
+    			res.render('error', {message: "Error: " + error.code + " " + error.message})
+    		}
+    	});
+			
+		
+
+	} 
+	else {
+		res.redirect('/login');
+	}
 })
 
 
-
+// just a tiny test
 router.get('/test', function (req, res) {
 	var data = { 
 		title: "My New Post", 
