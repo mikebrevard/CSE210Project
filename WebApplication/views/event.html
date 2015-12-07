@@ -1,11 +1,24 @@
 <div class="container">    
-    <h2>{{name}}</h2>
-    <p>ID: {{objectId}}</p> 
-    <p>Location: {{location}}</p> 
-    <p>Description: {{description}}</p>
-
     {{#if admin}}
-    <a href="/event_form" class="btn btn-lg btn-primary">Edit</a>
+      <form action="update_event/{{objectId}}" method="post">
+        <h2 class="form-signin-heading">Admin Panel for {{name}}</h2>
+      
+        <p>ID: {{objectId}}</p> 
+        <label for="name">Event Name</label>
+        <input
+            type="text" name="name" id="name" class="form-control"
+            placeholder="{{name}}" required autofocus>
+        <label for="location">Location</label>
+        <input
+            type="text" name="location" id="location" class="form-control"
+            placeholder="{{location}}" required>
+        <label for="description">Description</label>
+        <input
+            type="text" name="description" id="description" class="form-control"
+            placeholder="{{description}}" required>
+
+        <button class="btn btn-lg btn-primary" type="submit">Save Changes</button>
+      </form>
 
     <!-- show all people and their status -->
     <h2 class="sub-header">
@@ -42,18 +55,23 @@
     </table>
     </div>
     {{else}}
+        <h2>{{name}}</h2>
+        <p>ID: {{objectId}}</p> 
+        <p>Location: {{location}}</p> 
+        <p>Description: {{description}}</p>
+
         {{#if joined}}
             {{#if checkedIn}}
-            <p>You have already been checked in.</p>
+                <p>You have already been checked in.</p>
             {{else}}
-            <p>Please have the host scan the following QR code:</p>
-            <div id="qrcode"></div>
-            <script>
-                new QRCode(document.getElementById("qrcode"), window.location.host +"/checkin/{{objectId}}/{{userId}}");
-            </script>
+                <p>Please have the host scan the following QR code:</p>
+                <div id="qrcode"></div>
+                <script>
+                    new QRCode(document.getElementById("qrcode"), window.location.host +"/checkin/{{objectId}}/{{userId}}");
+                </script>
             {{/if}}
         {{else}}
-        <a href="/attend/{{objectId}}" class="btn btn-lg btn-primary">Attend</a> 
+            <a href="/attend/{{objectId}}" class="btn btn-lg btn-primary">Attend</a> 
         {{/if}}
     {{/if}}  
 

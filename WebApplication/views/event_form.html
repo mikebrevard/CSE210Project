@@ -1,4 +1,6 @@
-
+<script type="text/javascript" src="/assets/js/moment.js"></script>
+<link href="/assets/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<script type="text/javascript" src="/assets/js/bootstrap-datetimepicker.js"></script>
     <div class="container">    
 
       <form action="create_event" method="post">
@@ -8,8 +10,21 @@
         <input type="text" name="event_name" id="event_name" class="form-control" required autofocus>
         <label for="location">Location</label>
         <input type="text" name="location" id="location" class="form-control" required>
+        <label for="location">Date and Time</label>
+   
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' name="datetime" id="datetime" class="form-control" required>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+   
+  
+
         <label for="description">Description</label>
-        <input type="textarea" name="description" id="description" class="form-control" required>
+        <input type="text" name="description" id="description" class="form-control" required>
         <p class="red">{{message}}</p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Add Event</button>
       </form>
@@ -17,3 +32,8 @@
     </div> <!-- /container -->
 
 
+ <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>

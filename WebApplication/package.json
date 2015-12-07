@@ -1,24 +1,31 @@
 {
   "name": "eventor",
   "version": "0.0.0",
-  "description": "",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "*",
     "body-parser": "*",
-    "parse": "*"
+    "express": "*",
+    "parse": "*",
+    "passport": "^0.3.2",
+    "cookie-parser": "*",
+    "cookie-session": "*",
+    "fs": "*",
+    "passport-local": "*",
+    "express-handlebars": "*"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mikebrevard/Eventor"
+    "url": "git+https://github.com/mikebrevard/Eventor.git"
   },
   "author": "Angie Nguyen",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mikebrevard/Eventor/issues"
   },
-  "homepage": "https://github.com/mikebrevard/Eventor"
+  "homepage": "https://github.com/mikebrevard/Eventor",
+  "devDependencies": {},
+  "description": ""
 }
