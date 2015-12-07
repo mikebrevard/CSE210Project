@@ -1,22 +1,35 @@
 
 <div class="container">
 
-	<form class="form-signin" action="login" method="post">
-		<h2 class="form-signin-heading">Please sign in</h2>
+	<form class="form-signin" action="register" method="post">
+		<h2 class="form-signin-heading">Register</h2>
 		<label for="inputEmail" class="sr-only">Email address</label> 
-
 		<input
 			type="email" name="email" id="email" class="form-control"
 			placeholder="Email address" required autofocus> 
 
 		<label for="inputPassword" class="sr-only">Password</label> 
-
 		<input
 			type="password" name="password" id="password" class="form-control"
 			placeholder="Password" required>
+
+
+        <label for="name" class="sr-only">Name</label> 
+        <input
+            type="text" name="name" id="name" class="form-control"
+            placeholder="Name" required> 
+
+
+        <label for="gender" class="sr-only">Gender</label> 
+                <h4>Gender:</h4>
+        <select name="gender" required>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+  <option value="Other">Other</option>
+</select>
 		<p class="red">{{message}}</p>
-		<button class="btn btn-lg btn-primary btn-block" type="submit" value="login">Log in</button>
-        <p><a href="/register">Don't have an account? Register here!</a></p>
+		<button class="btn btn-lg btn-primary btn-block" type="submit" value="login">Register</button>
+        <p><a href="/login">Already have an account? Log in here!</a></p>
 	</form>
 
 </div>

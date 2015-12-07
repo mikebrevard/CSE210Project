@@ -7,7 +7,21 @@
         <label for="email">Email Address</label>
         <p>{{email}}</p>
         <label for="password">New Password</label>
-        <input type="password" name="password" id="password" class="form-control" required>
+        <input type="password" name="password" id="password" class="form-control" disabled>
+        <label for="name">Name</label> 
+        <input
+            type="text" name="name" id="name" class="form-control"
+            value="{{name}}" required> 
+
+        <label for="gender">Gender</label><br>
+                    <select name="gender" required>
+                    <option value="{{gender}}">{{gender}}</option>
+
+                    <option value="">--------</option>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+  <option value="Other">Other</option>
+</select>
         <p class="red">{{message}}</p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Save Changes</button>
       </form>

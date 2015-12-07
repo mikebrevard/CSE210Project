@@ -6,32 +6,29 @@ exports.renderlogIn = function (req, res) {
 	res.render('login');
 }
 
-exports.logIn = function (req, res) {
-	if (req.body.action == "login") {
-		 passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/login',
-                                   failureFlash: true })
-	}
-	else if (req.body.action == "register") {
-		var user = new Parse.User();
+exports.renderRegister = function (req, res) {
+	res.render('register');
+}
 
-		user.set("username", req.body.email);
-		user.set("email", req.body.email);
-		user.set("password", req.body.password);
+exports.register = function (req, res) {
+	var user = new Parse.User();
 
-		user.signUp(null, {
-		  	success: function (user) {
-		    	// Hooray! Let them use the app now.
-				passport.authenticate('local', { successRedirect: '/',
-                                   failureRedirect: '/login',
-                                   failureFlash: true })
-		  	},
-		  	error: function (user, error) {
-		    	// Show the error message somewhere and let the user try again.
-		    	res.render('login', {message: error.message})
-		  	}
-		});
-	}	
+	user.set("username", req.body.email);
+	user.set("email", req.body.email);
+	user.set("password", req.body.password);
+	user.set("name", req.body.name);
+	user.set("gender", req.body.gender);
+
+	user.signUp(null, {
+	  	success: function (user) {
+	    	// Hooray! Let them use the app now.
+			res.redirect('/');
+	  	},
+	  	error: function (user, error) {
+	    	// Show the error message somewhere and let the user try again.
+	    	res.render('register', {message: error.message})
+	  	}
+	});
 }
 
 exports.logOut = function (req, res) {
@@ -42,7 +39,9 @@ exports.logOut = function (req, res) {
 exports.getProfile = function(req, res) {
     var currentUser = req.user;	
     var data = { 
-  		email: currentUser.get('email')
+  		email: currentUser.get('email'),
+  		gender: currentUser.get('gender'),
+  		name: currentUser.get('name')
 	}
 	res.render('profile', data)
 }
@@ -52,6 +51,7 @@ exports.updateProfile = function(req, res) {
 	var currentUser = req.user;
 	
 	currentUser.set("name", req.body.name);
+	currentUser.set("gender", req.body.gender);
 
 	currentUser.save(null, {
         success: function(user) {
@@ -164,18 +164,19 @@ exports.getEvent = function (req, res) {
 				objectId: event.id, 
 				name: event.get('name'),
 				location: event.get('Location'),
-				date: new Date(event.get('date')),
+				date: event.get('date'),
 				description: event.get('Description'),
 			}
 
 		    var EventAdmins = Parse.Object.extend("EventAdmins");
 		    var query = new Parse.Query(EventAdmins);
 		    query.equalTo("event", event);
-		    query.equalTo("user", currentUser);
+		    query.include("user");
 		    query.first({
 		    	success: function(object) {
+		    		data.host = object.get('user').get('username');
 		    		// admin
-		    		if (object != null) {
+		    		if (object.get('user').id == currentUser.id) {
 		    			var arr = [];
 						var EventAttendees = Parse.Object.extend("EventAttendees");
 			    		var query = new Parse.Query(EventAttendees);
@@ -243,6 +244,11 @@ exports.getEvent = function (req, res) {
 }
 
 // // API stuff
+exports.updateEvent = function (req, res) {
+	// feature does not yet
+	res.render('error', {message: "Sorry! This feature is not available yet."})
+}
+
 
 // api post to create an event
 exports.createEvent = function (req, res) {
@@ -250,10 +256,9 @@ exports.createEvent = function (req, res) {
 	var Event = Parse.Object.extend("Event");
 	var newEvent = new Event();
 
-	console.log(req.body.event_name);
 	newEvent.set("name", req.body.event_name);
 	newEvent.set("Location", req.body.location);
-	newEvent.set("date", req.body.datetime);
+	newEvent.set("date", new Date(req.body.datetime));
 	newEvent.set("Description", req.body.description);
 	// need to add relation for host
 

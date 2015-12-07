@@ -4,19 +4,35 @@
         <h2 class="form-signin-heading">Admin Panel for {{name}}</h2>
       
         <p>ID: {{objectId}}</p> 
+        <p>Host: {{host}}</p>
         <label for="name">Event Name</label>
         <input
             type="text" name="name" id="name" class="form-control"
-            placeholder="{{name}}" required autofocus>
+            value="{{name}}" required autofocus>
         <label for="location">Location</label>
         <input
             type="text" name="location" id="location" class="form-control"
-            placeholder="{{location}}" required>
+            value="{{location}}" required>
+        <label for="location">Date and Time</label>
+   
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' name="datetime" id="datetime" class="form-control" value="{{date}}" required>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+        <script>
+        $(function () {
+            $('#datetimepicker1').datetimepicker();
+        });
+        </script>
         <label for="description">Description</label>
         <input
             type="text" name="description" id="description" class="form-control"
-            placeholder="{{description}}" required>
-
+            value="{{description}}" required>
+        <p class="red">{{message}}</p>
         <button class="btn btn-lg btn-primary" type="submit">Save Changes</button>
       </form>
 
@@ -57,14 +73,16 @@
     {{else}}
         <h2>{{name}}</h2>
         <p>ID: {{objectId}}</p> 
+        <p>Host: {{host}}</p>
         <p>Location: {{location}}</p> 
+        <p>Date: {{date}}</p>
         <p>Description: {{description}}</p>
 
         {{#if joined}}
             {{#if checkedIn}}
                 <p>You have already been checked in.</p>
             {{else}}
-                <p>Please have the host scan the following QR code:</p>
+                <p>Please have the host scan the following QR code to check in:</p>
                 <div id="qrcode"></div>
                 <script>
                     new QRCode(document.getElementById("qrcode"), window.location.host +"/checkin/{{objectId}}/{{userId}}");
@@ -105,5 +123,7 @@ $(document).ready(function() {
     else {$('#no-result').hide();}
   });
 });
+
+
 </script>
 

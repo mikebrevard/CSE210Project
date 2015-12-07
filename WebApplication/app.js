@@ -5,6 +5,7 @@ var express = require('express')
 	, bodyParser = require('body-parser')
 	, cookieParser = require('cookie-parser')
 	, session = require('cookie-session')
+	, flash = require('connect-flash')
 	, handlebars = require('express-handlebars');
 
 var passport = require('passport')
@@ -31,7 +32,6 @@ passport.use(new LocalStrategy({usernameField: "email", passwordField: "password
   function(username, password, done) {
   	Parse.User.logIn(username, password, {
 	  	success: function (user) {
-	  		console.log(username);
 	  		return done(null, user);
 	  	},
 	  	error: function (user, error) {
@@ -40,6 +40,7 @@ passport.use(new LocalStrategy({usernameField: "email", passwordField: "password
 	});
   }
 ));
+
 
 app.use(cookieParser());
 app.use(session({
@@ -50,10 +51,10 @@ app.use(session({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 
 passport.serializeUser(function(user, done) {
-	console.log('when does this get called' + user.id);
   done(null, user.id);
 });
 
@@ -77,6 +78,13 @@ passport.deserializeUser(function(id, done) {
 //   }
 // });
 
+
+
+// for the views
+app.engine('html', handlebars({extname:'html', defaultLayout:'main'}));
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
+
 //var usersController = require(__dirname + '/controllers/users.js');
 var indexController = require(__dirname + '/controllers/index.js');
 
@@ -90,27 +98,39 @@ function loggedIn(req, res, next) {
 
 app.get('/', loggedIn, indexController.getDashboard);
 app.route('/login')
-	.post(indexController.logIn)
+	.post(
+		function(req, res, next) {
+		  passport.authenticate('local', function(err, user, info) {
+		    if (err) {
+		      return next(err); // will generate a 500 error
+		    }
+		    // Generate a JSON response reflecting authentication status
+		    if (!user) {
+		       return res.render('login', { message: info.message })
+		    }
+		     req.logIn(user, function(err) {
+		      if (err) { return next(err); }
+		      return res.redirect('/');
+		    });
+		    
+		  })(req, res, next);
+		}
+	)
 	.get(indexController.renderlogIn);
 app.get('/logout', indexController.logOut);
+app.route('/register')
+	.post(indexController.register)
+	.get(indexController.renderRegister);
 app.route('/profile')
 	.post(loggedIn, indexController.updateProfile)
 	.get(loggedIn, indexController.getProfile);
 app.route('/create_event/')
 	.post(loggedIn, indexController.createEvent)
 	.get(loggedIn, indexController.renderCreateEvent)
+app.post('/update_event/:_id', loggedIn, indexController.updateEvent)
 app.get('/event/:_id', loggedIn, indexController.getEvent);
 app.get('/checkin/:_eventid/:_userid', loggedIn, indexController.checkIn);
 app.get('/attend/:_id', loggedIn, indexController.attend);
-
-// error?
-
-
-
-// for the views
-app.engine('html', handlebars({extname:'html', defaultLayout:'main'}));
-app.set('view engine', 'html');
-app.set('views', __dirname + '/views');
 
 
 
