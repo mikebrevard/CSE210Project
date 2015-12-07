@@ -125,7 +125,7 @@ exports.getDashboard = function (req, res) {
 		    					}
 		    					arr3.push(temp);
 		    				}
-		    				res.render('dashboard', {allEvents: arr, yourEvents: arr2, joinedEvents: arr3, email: currentUser.get('email')})
+		    				res.render('dashboard', {allEvents: arr, yourEvents: arr2, joinedEvents: arr3, currName: currentUser.get('name')})
 		    				
 		    			},
 		    			error: function(error){
@@ -142,7 +142,7 @@ exports.getDashboard = function (req, res) {
 		},
 		error: function(error) {
 			console.log("Error: " + error.code + " " + error.message);
-			res.render('dashboard', {email: currentUser.get('email')})
+			res.render('dashboard', {currName: currentUser.get('name')})
 		}
 	});
 }

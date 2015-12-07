@@ -1,4 +1,20 @@
-<div class="container">    
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div class="col-sm-3 col-md-2 sidebar">
+ <p></p>
+ <p></p>
+ <p></p>
+      <ul class="nav nav-sidebar">
+        <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Analytics</a></li>
+        <li><a href="#">Attendees</a></li>
+        <li><a href="#">Export</a></li>
+      </ul>
+    </div>
+
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">    
     {{#if admin}}
       <form action="update_event/{{objectId}}" method="post">
         <h2 class="form-signin-heading">Admin Panel for {{name}}</h2>
@@ -36,6 +52,16 @@
         <button class="btn btn-lg btn-primary" type="submit">Save Changes</button>
       </form>
 
+      <h2 class="sub-header">
+    Analytics
+    </h2>
+    <!--<p>{{count_check}} out of {{count_join}} have already checked into the event.</p>-->
+    <p>30 out of 1512 attendees have already checked into the event.</p>
+
+    <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+    <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+   
     <!-- show all people and their status -->
     <h2 class="sub-header">
     Attendees
@@ -124,6 +150,95 @@ $(document).ready(function() {
   });
 });
 
+    $('#container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {
+            text: 'Gender Distribution of Attendees'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            name: 'Percentage',
+            colorByPoint: true,
+            data: [{
+                name: 'Female',
+                y: 56
+            }, {
+                name: 'Male',
+                y: 44
+            }]
+        }]
+    });
 
+  $('#container2').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Time of Check-ins'
+        },
+        xAxis: {
+            categories: [
+                '09:00:00',
+                '10:00:00',
+                '11:00:00',
+                '12:00:00',
+                '13:00:00',
+                '14:00:00',
+                '15:00:00',
+                '16:00:00',
+                '17:00:00',
+                '18:00:00',
+                '19:00:00',
+                '20:00:00'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Attendees'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y}</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+           
+            name: 'Checked In Attendees',
+            data: [42, 33, 34, 39, 52, 75, 57, 60, 47, 39, 46, 51]
+
+        }]
+    });
 </script>
 

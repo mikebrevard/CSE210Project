@@ -2,10 +2,24 @@
 <div class="container-fluid">
   <div class="row">
    
-<% include /partials/sidebar %>
+ <div class="col-sm-3 col-md-2 sidebar">
+ <p></p>
+ <p></p>
+ <p></p>
+      <ul class="nav nav-sidebar">
+        <li class="active"><a href="#">Dashboard <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Profile</a></li>
+        <li><a href="#">Logout</a></li>
+      </ul>
+
+      <ul class="nav nav-sidebar">
+        <li><a href="#">About</a></li>
+      </ul>
+      
+    </div>
 
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-      <h1 class="page-header">Welcome, {{email}}!</h1>
+      <h1 class="page-header">Welcome, {{currName}}!</h1>
 
       <a href="/create_event" class="btn btn-lg btn-primary">Create A New Event</a>
 
