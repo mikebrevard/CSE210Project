@@ -81,7 +81,11 @@ passport.deserializeUser(function(id, done) {
 
 
 // for the views
-app.engine('html', handlebars({extname:'html', defaultLayout:'main'}));
+app.engine('html', handlebars({
+	extname:'html', 
+	defaultLayout:'main', 
+	partialsDir:"views/partials/",
+	layoutsDir:"views/layouts/"}));
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 

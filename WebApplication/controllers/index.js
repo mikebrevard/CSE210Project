@@ -184,6 +184,10 @@ exports.getEvent = function (req, res) {
 			    		query.include("user");
 			    		query.find({
 			    			success: function(results) {
+			    				data.count_check = 0;
+			    				data.females = 0;
+			    				data.males = 0;
+			    				data.others = 0;
 			    				for (var i = 0; i < results.length; i++) {
 			    					var obj = results[i].get('user');
 			    					var temp = {
@@ -192,10 +196,18 @@ exports.getEvent = function (req, res) {
 			    						userStatus: results[i].get('CheckinStatus')
 			    					}
 			    					arr.push(temp);
+			    					if (results[i].get('user').get('checkedIn') == true)
+			    						data.count_check++;
+			    					switch(results[i].get('user').get('gender')) {
+			    						case "Female": data.females++; break;
+			    						case "Male": data.males++; break;
+			    						default: data.others++; break;
+			    					}
 			    				}
 			    				data.admin = true;
 			    				data.joined = false;
 			    				data.attendees = arr;
+			    				data.count_join = results.length;
 				    			
 				    			res.render('event', data);
 			    			},
@@ -367,9 +379,15 @@ exports.checkIn = function (req, res) {
 			    query.first({
 			    	success: function(object) {
 			    			object.set("CheckinStatus", true);
-			    			object.save();
-			    			res.redirect('/event/' + event.id);
-			    		
+			    			//object.set("CheckinTime", new Date().getTime());
+			    			object.save(null, {
+							 	success: function(object) {
+							 		res.redirect('/event/' + event.id);
+							 	},
+							 	error: function(object, error) {
+							 		res.render('error', {message: "Error: " + error.code + " " + error.message})
+							 	}
+							});		    		
 		    		
 		    		},
 		    		error: function(error) {

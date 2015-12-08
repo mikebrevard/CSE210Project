@@ -1,21 +1,29 @@
+{{> topbar}}
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
+<script type="text/javascript" src="/assets/js/moment.js"></script>
+<link href="/assets/css/bootstrap-datetimepicker.css" rel="stylesheet">
+<script type="text/javascript" src="/assets/js/bootstrap-datetimepicker.js"></script>
+
 <div class="col-sm-3 col-md-2 sidebar">
- <p></p>
- <p></p>
- <p></p>
+
       <ul class="nav nav-sidebar">
-        <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Analytics</a></li>
-        <li><a href="#">Attendees</a></li>
-        <li><a href="#">Export</a></li>
+        <li class="active"><a href="#top">Overview <span class="sr-only">(current)</span></a></li>
+        <li><a href="#analytics">Analytics</a></li>
+        <li><a href="#attendees">Attendees</a></li>
+        <li><a href="#export">Export</a></li>
       </ul>
     </div>
 
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">    
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">   
+
+<!---------------------- ADMIN ------------>
+
     {{#if admin}}
+    <span id="top"></span>
       <form action="update_event/{{objectId}}" method="post">
         <h2 class="form-signin-heading">Admin Panel for {{name}}</h2>
       
@@ -39,11 +47,7 @@
                 </span>
             </div>
         </div>
-        <script>
-        $(function () {
-            $('#datetimepicker1').datetimepicker();
-        });
-        </script>
+
         <label for="description">Description</label>
         <input
             type="text" name="description" id="description" class="form-control"
@@ -52,18 +56,17 @@
         <button class="btn btn-lg btn-primary" type="submit">Save Changes</button>
       </form>
 
-      <h2 class="sub-header">
+      <h2 id="analytics" class="sub-header">
     Analytics
     </h2>
-    <!--<p>{{count_check}} out of {{count_join}} have already checked into the event.</p>-->
-    <p>30 out of 1512 attendees have already checked into the event.</p>
+    <p>{{count_check}} out of {{count_join}} attendees have already checked into the event.</p>
 
     <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 
     <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
    
     <!-- show all people and their status -->
-    <h2 class="sub-header">
+    <h2 id="attendees" class="sub-header">
     Attendees
     <div class="form-group pull-right">
       <input type="text" id="search" class="search form-control" placeholder="Search">
@@ -97,12 +100,14 @@
     </table>
     </div>
     {{else}}
+
+    <!------------------------ ATTENDEE ------------------------>
         <h2>{{name}}</h2>
-        <p>ID: {{objectId}}</p> 
-        <p>Host: {{host}}</p>
-        <p>Location: {{location}}</p> 
-        <p>Date: {{date}}</p>
-        <p>Description: {{description}}</p>
+        <p><b>ID</b>: {{objectId}}</p> 
+        <p><b>Host</b>: {{host}}</p>
+        <p><b>Location</b>: {{location}}</p> 
+        <p><b>Date</b>: {{date}}</p>
+        <p><b>Description</b>: {{description}}</p>
 
         {{#if joined}}
             {{#if checkedIn}}
@@ -181,10 +186,14 @@ $(document).ready(function() {
             colorByPoint: true,
             data: [{
                 name: 'Female',
-                y: 56
+                y: {{females}}/{{count_join}}
             }, {
                 name: 'Male',
-                y: 44
+                y: {{males}}/{{count_join}}
+            },
+            {
+                name: 'Other',
+                y: {{others}}/{{count_join}}
             }]
         }]
     });
@@ -240,5 +249,18 @@ $(document).ready(function() {
 
         }]
     });
+
+  $('a[href*=#]:not([href=#])').click(function() {
+    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+      var target = $(this.hash);
+      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+      if (target.length) {
+        $('html,body').animate({
+          scrollTop: target.offset().top
+        }, 1000);
+        return false;
+      }
+    }
+  });
 </script>
 
